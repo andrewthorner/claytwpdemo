@@ -93,23 +93,30 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // --- Navigation Link Event Delegation ---
+// --- Navigation Link Event Delegation (GitHub Pages Compatible) ---
   document.addEventListener('click', (e) => {
-    const link = e.target.closest('[data-page], [data-link], a[href^="/"]');
+    // Intercept clicks on elements with data-page, data-link, or any anchor tag
+    const link = e.target.closest('[data-page], [data-link], a');
     
     if (link) {
       const href = link.getAttribute('href');
       const dataPage = link.getAttribute('data-page');
 
-      // Ignore external links, mailto, tel, or internal anchor hashes
-      if (href && (href.startsWith('http') || href.startsWith('mailto:') || href.startsWith('tel:') || href.startsWith('#'))) {
+      // Ignore external links, mailto, tel, or hash fragment links
+      if (!href || href.startsWith('http') || href.startsWith('mailto:') || href.startsWith('tel:') || href.startsWith('#')) {
         return;
       }
 
       e.preventDefault();
       
-      // Determine target route name
-      let targetRoute = dataPage || href || 'home';
+      // Extract target route name, stripping leading/trailing slashes
+      let targetRoute = dataPage || href.replace(/^\/+|\/+$/g, '') || 'home';
+      
+      // Normalize 'index.html' or empty paths to 'home'
+      if (targetRoute === 'index.html' || targetRoute === '') {
+        targetRoute = 'home';
+      }
+
       loadPage(targetRoute);
     }
   });

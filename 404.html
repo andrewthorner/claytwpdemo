@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Redirecting...</title>
+  <script>
+    // Preserves requested path and redirects to index.html for SPA routing
+    var path = window.location.pathname.replace('/claytwpdemo', '').replace(/^\/+|\/+$/g, '');
+    if (path) {
+      sessionStorage.setItem('redirect_path', path);
+    }
+    window.location.replace('/claytwpdemo/');
+  </script>
+</head>
+<body>
+</body>
+</html>

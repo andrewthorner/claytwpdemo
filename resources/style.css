@@ -212,7 +212,7 @@ header {
   background-color: var(--primary-navy, #1b365d);
   padding: 6px;
   position: relative;
-  top: 12px;
+  top: 8px;
   margin-bottom: -20px;
   flex-shrink: 0;
   z-index: 1001;

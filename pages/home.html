@@ -1,0 +1,145 @@
+<!-- Full-Bleed Edge-to-Edge Banner with Floating Hero Box -->
+<div class="full-bleed-banner">
+  <img 
+    src="/images/hall/IMG_2114.webp" 
+    alt="Clayton Township Hall building in Sterling, Michigan" 
+    class="full-bleed-img"
+  >
+  
+  <div class="hero-overlay-card">
+    <h2 class="hero-title">Welcome to <br><span>Clayton Township</span></h2>
+    <hr class="hero-divider">
+    <p class="hero-subtitle">Sterling, MI &bull; Arenac County</p>
+    <a href="/contact" data-link class="hero-btn" aria-label="Contact the Clayton Township Hall">Contact Township Hall &rarr;</a>
+  </div>
+</div>
+
+<!-- Quick Links Badge Section (Parser-Safe) -->
+<section class="quick-links-section" aria-label="Quick Access Services">
+  <div class="quick-links-grid">
+    
+    <!-- Trash & Recycling -->
+    <a href="/garbage" class="quick-badge" data-link>
+      <div class="badge-icon-wrapper icon-trash" aria-hidden="true"></div>
+      <span class="badge-title">Trash & Recycling</span>
+    </a>
+
+    <!-- Property Taxes -->
+    <a href="/tax-information" class="quick-badge" data-link>
+      <div class="badge-icon-wrapper icon-taxes" aria-hidden="true"></div>
+      <span class="badge-title">Property Taxes</span>
+    </a>
+
+    <!-- Hall Rental -->
+    <a href="/hall-rental" class="quick-badge" data-link>
+      <div class="badge-icon-wrapper icon-hall" aria-hidden="true"></div>
+      <span class="badge-title">Hall Rental</span>
+    </a>
+
+    <!-- Zoning & Permits -->
+    <a href="/zoning" class="quick-badge" data-link>
+      <div class="badge-icon-wrapper icon-zoning" aria-hidden="true"></div>
+      <span class="badge-title">Zoning & Permits</span>
+    </a>
+
+    <!-- Cemetery Info -->
+    <a href="/cemetery" class="quick-badge" data-link>
+      <div class="badge-icon-wrapper icon-cemetery" aria-hidden="true"></div>
+      <span class="badge-title">Cemetery Info</span>
+    </a>
+
+    <!-- Public Minutes -->
+    <a href="/minutes" class="quick-badge" data-link>
+      <div class="badge-icon-wrapper icon-minutes" aria-hidden="true"></div>
+      <span class="badge-title">Public Minutes</span>
+    </a>
+
+  </div>
+</section>
+
+<!-- Dynamic Announcements & Notices Section -->
+<section style="margin-bottom: 2.5rem;">
+  <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
+    <h2 style="margin: 0; color: var(--primary-navy);">Announcements & Public Notices</h2>
+  </div>
+  
+  <div id="announcements-container" aria-live="polite">
+    <p>Loading township announcements...</p>
+  </div>
+</section>
+
+<!-- Interactive Calendar Section -->
+<section style="margin-bottom: 2.5rem;">
+  <h2 style="color: var(--primary-navy);">Township Calendar</h2>
+  
+  <div class="calendar-card">
+    <div class="calendar-header">
+      <h3 id="calendar-month-year-title" style="margin: 0;">Events</h3>
+      
+      <div class="calendar-controls">
+        <button id="cal-prev-btn" class="cal-btn" aria-label="Previous Month">&lt; Previous</button>
+        <button id="cal-today-btn" class="cal-btn" aria-label="Jump to Current Month">Today</button>
+        <button id="cal-next-btn" class="cal-btn" aria-label="Next Month">Next &gt;</button>
+        
+        <select id="cal-month-select" class="cal-select" aria-label="Select Month">
+          <option value="0">January</option>
+          <option value="1">February</option>
+          <option value="2">March</option>
+          <option value="3">April</option>
+          <option value="4">May</option>
+          <option value="5">June</option>
+          <option value="6">July</option>
+          <option value="7">August</option>
+          <option value="8">September</option>
+          <option value="9">October</option>
+          <option value="10">November</option>
+          <option value="11">December</option>
+        </select>
+
+        <select id="cal-year-select" class="cal-select" aria-label="Select Year">
+          <option value="2026">2026</option>
+          <option value="2027">2027</option>
+          <option value="2028">2028</option>
+          <option value="2029">2029</option>
+          <option value="2030">2030</option>
+        </select>
+
+        <button id="cal-go-btn" class="cal-btn-primary">Go</button>
+      </div>
+    </div>
+
+    <div id="calendar-grid-container" aria-live="polite">
+      <!-- Calendar Grid dynamically populates here -->
+    </div>
+  </div>
+</section>
+
+<!-- Township Overview Cards -->
+<section style="margin-bottom: 2.5rem;">
+  <h2 style="color: var(--primary-navy);">Township Information & Governance</h2>
+  <div class="grid-services">
+    <article class="card" style="border-top: 4px solid var(--primary-navy);">
+      <h3>Township Hall & Hours</h3>
+      <p>Located at 1057 Dobler Road, Sterling, MI. Contact officials or view official hall opening hours.</p>
+      <a href="/contact" data-link aria-label="View Township Hall location and office hours">Contact Info & Hours &rarr;</a>
+    </article>
+
+    <article class="card" style="border-top: 4px solid var(--secondary-green);">
+      <h3>Public Transparency & Budget</h3>
+      <p>Review public budget reports, official audit summaries, and township financial disclosures.</p>
+      <a href="/government" data-link aria-label="View Clayton Township financial documents">Financial Reports &rarr;</a>
+    </article>
+
+    <article class="card" style="border-top: 4px solid var(--primary-navy);">
+      <h3>Roads & Seasonal Maintenance</h3>
+      <p>Updates on road brining schedules, dust control, and Arenac County Road Commission notices.</p>
+      <a href="/roads" data-link aria-label="View Road Brining and maintenance schedule">Road Maintenance Info &rarr;</a>
+    </article>
+
+    <article class="card" style="border-top: 4px solid var(--secondary-green);">
+      <h3>Township Board Officials</h3>
+      <p>Meet your elected officials including Supervisor, Clerk, Treasurer, and Trustees.</p>
+      <a href="/government" data-link aria-label="View Township Board members and contacts">Board Directory &rarr;</a>
+    </article>
+  </div>
+</section>

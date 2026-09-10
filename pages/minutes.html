@@ -1,0 +1,82 @@
+<section class="hero">
+  <h2>Public Meeting Minutes</h2>
+  <p>Select a category below to view official meeting agendas, record logs, and approved township minutes.</p>
+</section>
+
+<!-- Tab Navigation -->
+<div class="tab-container">
+  <div role="tablist" aria-label="Meeting Minutes Categories" class="tab-buttons">
+    <button role="tab" aria-selected="true" aria-controls="board-panel" id="tab-board" class="tab-btn active">
+      Township Board Minutes
+    </button>
+    <button role="tab" aria-selected="false" aria-controls="planning-panel" id="tab-planning" class="tab-btn">
+      Planning Commission & ZBA
+    </button>
+  </div>
+
+  <!-- Panel 1: Township Board Minutes -->
+  <div id="board-panel" role="tabpanel" aria-labelledby="tab-board" class="tab-panel">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
+      <h3 style="margin: 0;">Township Board Minutes</h3>
+      
+      <!-- Accessible Year Filter -->
+      <div>
+        <label for="board-year-select" style="font-weight: bold; margin-right: 0.5rem;">Select Year:</label>
+        <select id="board-year-select" class="year-filter" data-target="board-minutes-container" style="padding: 8px 12px; font-size: 1rem; border-radius: 4px; border: 1px solid var(--border-color);">
+          <option value="2026">2026</option>
+          <option value="2025">2025</option>
+          <option value="2024">2024</option>
+          <option value="2023">2023</option>
+          <option value="2022">2022</option>
+          <option value="2021">2021</option>
+          <option value="2020">2020</option>
+          <option value="2019">2019</option>
+          <option value="2018">2018</option>
+          <option value="2017">2017</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Live Region: Announces content changes to screen readers automatically -->
+    <div id="board-minutes-container" aria-live="polite" class="card">
+      <!-- Default loads 2026 -->
+      <h4 style="margin-top: 0;">2026 Board Meeting Minutes</h4>
+      <ul>
+        <li><a href="#" aria-label="Download January 12, 2026 Board Meeting Minutes PDF">January 12, 2026 Minutes (PDF)</a></li>
+        <li><a href="#" aria-label="Download February 9, 2026 Board Meeting Minutes PDF">February 9, 2026 Minutes (PDF)</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Panel 2: Planning Commission & ZBA -->
+  <div id="planning-panel" role="tabpanel" aria-labelledby="tab-planning" class="tab-panel hidden">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
+      <h3 style="margin: 0;">Planning Commission & ZBA Minutes</h3>
+      
+      <!-- Accessible Year Filter -->
+      <div>
+        <label for="planning-year-select" style="font-weight: bold; margin-right: 0.5rem;">Select Year:</label>
+        <select id="planning-year-select" class="year-filter" data-target="planning-minutes-container" style="padding: 8px 12px; font-size: 1rem; border-radius: 4px; border: 1px solid var(--border-color);">
+          <option value="2026">2026</option>
+          <option value="2025">2025</option>
+          <option value="2024">2024</option>
+          <option value="2023">2023</option>
+          <option value="2022">2022</option>
+          <option value="2021">2021</option>
+          <option value="2020">2020</option>
+          <option value="2019">2019</option>
+          <option value="2018">2018</option>
+          <option value="2017">2017</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Live Region -->
+    <div id="planning-minutes-container" aria-live="polite" class="card">
+      <h4 style="margin-top: 0;">2026 Planning & ZBA Minutes</h4>
+      <ul>
+        <li><a href="#" aria-label="Download 2026 Planning Commission Minutes PDF">2026 Planning Minutes (PDF)</a></li>
+      </ul>
+    </div>
+  </div>
+</div>

@@ -206,7 +206,7 @@ header {
   max-width: 150px !important;
   max-height: 150px !important;
   object-fit: cover;
-  object-position: 4px;
+  object-position: 2px;
   border-radius: 50%;
   background-color: var(--primary-navy, #1b365d);
   padding: 6px;

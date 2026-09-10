@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // --- Navigation Link Event Delegation ---
+// --- Navigation Link Event Delegation ---
   document.addEventListener('click', (e) => {
     const link = e.target.closest('[data-page], [data-link], a');
     
@@ -93,8 +93,15 @@ document.addEventListener('DOMContentLoaded', () => {
       const href = link.getAttribute('href');
       const dataPage = link.getAttribute('data-page');
 
-      if (!href || href.startsWith('http') || href.startsWith('mailto:') || href.startsWith('tel:') || href.startsWith('#')) {
-        return;
+      // IGNORE: External links, mailto, tel, anchor hashes, OR PDF files
+      if (!href || 
+          href.startsWith('http') || 
+          href.startsWith('mailto:') || 
+          href.startsWith('tel:') || 
+          href.startsWith('#') || 
+          href.toLowerCase().endsWith('.pdf') || 
+          href.toLowerCase().includes('.pdf')) {
+        return; // Allows normal browser handling (opens PDF)
       }
 
       e.preventDefault();

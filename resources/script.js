@@ -1,6 +1,7 @@
 /* ==========================================================================
    CLAYTON TOWNSHIP - MASTER JAVASCRIPT
    WCAG 2.1 AA Compliant Router & Dynamic Components
+   Clean HTML5 URLs (No Hash) & Session-Aware Notice Modals
 
    TABLE OF CONTENTS:
    1. CORE SPA ROUTER & NAVIGATION
@@ -11,14 +12,14 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
-// ==========================================================================
-  // 1. CORE SPA ROUTER & NAVIGATION (GITHUB PAGES HASH ROUTER)
+  // ==========================================================================
+  // 1. CORE SPA ROUTER & NAVIGATION
   // ==========================================================================
   const mainContent = document.getElementById('app-content');
   const navToggle = document.querySelector('.nav-toggle');
   const navMenu = document.querySelector('nav');
 
-  // Mobile Hamburger Toggle
+  // Mobile Hamburger Menu Toggle
   if (navToggle && navMenu) {
     navToggle.addEventListener('click', () => {
       const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
@@ -28,44 +29,43 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // --- Dynamic Content Loader ---
-  async function loadPage(pageName) {
+  async function loadPage(pageName, pushToHistory = true) {
     try {
-      let cleanName = pageName.replace(/^#\/?/, '').replace(/^\/+|\/+$/g, '');
-      if (!cleanName || cleanName === 'index.html' || cleanName === 'home') {
+      let cleanName = pageName.replace('/claytwpdemo', '').replace(/^\/+|\/+$/g, '');
+      if (!cleanName || cleanName === 'index.html') {
         cleanName = 'home';
       }
 
-      // Fetch HTML fragment relative to root folder
       const response = await fetch(`pages/${cleanName}.html`);
-      
-      if (!response.ok) {
-        throw new Error(`Page not found (${response.status})`);
-      }
+      if (!response.ok) throw new Error(`Page not found (${response.status})`);
 
       const html = await response.text();
-
-      if (!mainContent) {
-        console.error('CRITICAL: #app-content element missing');
-        return;
-      }
+      if (!mainContent) return;
 
       mainContent.innerHTML = html;
 
-      // Trigger home dynamic widgets after DOM insertion
+      // Trigger home dynamic widgets ONLY on homepage
       if (cleanName === 'home') {
         requestAnimationFrame(() => {
           setTimeout(() => {
-            loadAnnouncements();
+            loadAnnouncements(true);
             initCalendar();
           }, 50);
         });
+      } else {
+        closeModalOverlay();
       }
 
-      // Manage focus for accessibility
+      // Keep clean URLs without '#' hash
+      if (pushToHistory) {
+        const repoPath = window.location.pathname.includes('/claytwpdemo') ? '/claytwpdemo' : '';
+        const cleanPath = cleanName === 'home' ? `${repoPath}/` : `${repoPath}/${cleanName}`;
+        history.pushState({ page: cleanName }, '', cleanPath);
+      }
+
       mainContent.setAttribute('tabindex', '-1');
       mainContent.focus();
 
-      // Close mobile navigation menu on route change
       if (navMenu && navMenu.classList.contains('is-active')) {
         navMenu.classList.remove('is-active');
         if (navToggle) navToggle.setAttribute('aria-expanded', 'false');
@@ -76,8 +76,8 @@ document.addEventListener('DOMContentLoaded', () => {
         mainContent.innerHTML = `
           <section class="error-msg" style="padding: 2.5rem 1rem; text-align: center;">
             <h2>Page Load Error</h2>
-            <p>Sorry, the requested page (${pageName}) could not be loaded.</p>
-            <a href="#home" style="font-weight: bold; text-decoration: underline;">&larr; Return Home</a>
+            <p>Sorry, the requested page could not be loaded.</p>
+            <a href="/" data-link style="font-weight: bold; text-decoration: underline;">&larr; Return Home</a>
           </section>
         `;
       }
@@ -85,47 +85,25 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // --- Hash Change Route Listener ---
-  function handleHashRoute() {
-    const hash = window.location.hash || '#home';
-    loadPage(hash);
-  }
-
-  // Listen for hash changes (e.g., clicking #government or using browser Back/Forward)
-  window.addEventListener('hashchange', handleHashRoute);
-
-  // Initial load execution
-  handleHashRoute();
-
-// --- Navigation Link Event Delegation (GitHub Pages Compatible) ---
+  // --- Navigation Link Event Delegation ---
   document.addEventListener('click', (e) => {
-    // Intercept clicks on elements with data-page, data-link, or any anchor tag
     const link = e.target.closest('[data-page], [data-link], a');
     
     if (link) {
       const href = link.getAttribute('href');
       const dataPage = link.getAttribute('data-page');
 
-      // Ignore external links, mailto, tel, or hash fragment links
       if (!href || href.startsWith('http') || href.startsWith('mailto:') || href.startsWith('tel:') || href.startsWith('#')) {
         return;
       }
 
       e.preventDefault();
-      
-      // Extract target route name, stripping leading/trailing slashes
-      let targetRoute = dataPage || href.replace(/^\/+|\/+$/g, '') || 'home';
-      
-      // Normalize 'index.html' or empty paths to 'home'
-      if (targetRoute === 'index.html' || targetRoute === '') {
-        targetRoute = 'home';
-      }
-
+      let targetRoute = dataPage || href.replace('/claytwpdemo', '').replace(/^\/+|\/+$/g, '') || 'home';
       loadPage(targetRoute);
     }
   });
 
-  // --- Browser History Navigation (Back / Forward Buttons) ---
+  // --- Browser History Navigation ---
   window.addEventListener('popstate', (e) => {
     if (e.state && e.state.page) {
       loadPage(e.state.page, false);
@@ -135,18 +113,26 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // --- Initial SPA Router Trigger ---
-  const initialPath = window.location.pathname.replace('/claytwpdemo', '').replace(/^\/+|\/+$/g, '') || 'home';
-  loadPage(initialPath, false);
+  // --- Initial SPA Router Execution with 404 Redirect Detection ---
+  (function initRoute() {
+    const redirectPath = sessionStorage.getItem('redirect_path');
+    if (redirectPath) {
+      sessionStorage.removeItem('redirect_path');
+      loadPage(redirectPath, true);
+    } else {
+      const initialPath = window.location.pathname.replace('/claytwpdemo', '').replace(/^\/+|\/+$/g, '') || 'home';
+      loadPage(initialPath, false);
+    }
+  })();
 
 
   // ==========================================================================
-  // 2. HOME PAGE: ANNOUNCEMENTS CAROUSEL (WCAG AA COMPLIANT)
+  // 2. HOME PAGE: ANNOUNCEMENTS CAROUSEL & SESSION MODALS
   // ==========================================================================
   let carouselInterval = null;
   let currentSlideIndex = 0;
 
-  async function loadAnnouncements() {
+  async function loadAnnouncements(isHomePage = false) {
     const container = document.getElementById('announcements-container');
     if (!container) return;
 
@@ -161,14 +147,16 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      checkAndTriggerModals(announcements);
+      // Check popup modals ONLY if on home page and NOT already seen in this session
+      if (isHomePage && !sessionStorage.getItem('hasSeenNoticeModal')) {
+        checkAndTriggerModals(announcements);
+      }
 
       const pinnedItems = announcements.filter(item => item.pinned === true).slice(0, 3);
       const standardItems = announcements.filter(item => !item.pinned);
 
       let htmlOutput = '<div class="announcements-flex-container">';
 
-      // Left Column: Pinned Notice Carousel Box
       if (pinnedItems.length > 0) {
         htmlOutput += `
           <div class="pinned-carousel-wrapper" id="pinned-carousel" aria-roledescription="carousel" aria-label="Important Township Notices">
@@ -199,7 +187,6 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
       }
 
-      // Right Column: Scrollable Feed of Standard Notices
       if (standardItems.length > 0) {
         htmlOutput += `
           <div class="announcements-scroll-box" tabindex="0" aria-label="Scrollable Township Public Notices">
@@ -280,22 +267,21 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // --- Modal Popup Controls ---
-  let popupQueue = [];
-
   function checkAndTriggerModals(announcements) {
-    popupQueue = announcements.filter(item => item.popup === true);
-    if (popupQueue.length > 0) {
-      displayNextModal();
+    const popups = announcements.filter(item => item.popup === true);
+    if (popups.length > 0) {
+      sessionStorage.setItem('hasSeenNoticeModal', 'true');
+      displayNextModal(popups);
     }
   }
 
-  function displayNextModal() {
-    if (popupQueue.length === 0) {
+  function displayNextModal(queue) {
+    if (queue.length === 0) {
       closeModalOverlay();
       return;
     }
 
-    const currentNotice = popupQueue[0];
+    const currentNotice = queue[0];
     const backdrop = document.getElementById('modal-backdrop');
     const title = document.getElementById('modal-title');
     const date = document.getElementById('modal-date');
@@ -319,24 +305,22 @@ document.addEventListener('DOMContentLoaded', () => {
     if (closeBtn) {
       closeBtn.focus();
       closeBtn.onclick = () => {
-        popupQueue.shift();
-        displayNextModal();
+        queue.shift();
+        displayNextModal(queue);
       };
     }
 
     document.onkeydown = (e) => {
       if (e.key === 'Escape' && !backdrop.classList.contains('hidden')) {
-        popupQueue.shift();
-        displayNextModal();
+        queue.shift();
+        displayNextModal(queue);
       }
     };
   }
 
   function closeModalOverlay() {
     const backdrop = document.getElementById('modal-backdrop');
-    if (backdrop) {
-      backdrop.classList.add('hidden');
-    }
+    if (backdrop) backdrop.classList.add('hidden');
     document.onkeydown = null;
   }
 

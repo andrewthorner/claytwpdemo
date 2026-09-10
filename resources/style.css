@@ -19,7 +19,7 @@
 :root {
   --primary-navy: #1b365d;     /* High contrast navy: 10.5:1 ratio on white */
   --secondary-green: #2d5a27;   /* High contrast green: 7.2:1 ratio on white */
-  --text-dark: #1f2937;         /* Body text contrast: 14.8:1 ratio on white */
+  --text-dark: #1f2937;          /* Body text contrast: 14.8:1 ratio on white */
   --text-muted: #4b5563;        /* Muted text contrast: 7.1:1 ratio on white */
   --bg-light: #f8fafc;
   --card-bg: #ffffff;
@@ -88,7 +88,7 @@ textarea:focus-visible {
   background: var(--primary-navy);
   color: #ffffff;
   padding: 12px 20px;
-  z-index: 1000;
+  z-index: 2000;
   text-decoration: none;
   font-weight: bold;
   border-radius: 4px;
@@ -122,7 +122,7 @@ textarea:focus-visible {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 2000;
+  z-index: 3000;
   opacity: 1;
   transition: opacity 0.25s ease-in-out;
 }
@@ -180,54 +180,41 @@ textarea:focus-visible {
 /* ==========================================================================
    3. GLOBAL HEADER & NAVIGATION
    ========================================================================== */
-/* Header & Overlapping Logo Badge */
 header {
   background-color: var(--primary-navy, #1b365d);
   color: #ffffff;
   padding: 1rem 1.5rem;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   position: relative;
-  z-index: 100; /* Ensures the header and overflowing logo sit above the hero banner */
+  z-index: 1000; /* Ensures header and mobile menu sit above page content */
 }
 
 .header-container {
   max-width: 1400px;
-  max-height: 100px;
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
+  position: relative;
 }
 
-/* Floating Seal Logo Rules */
-/* Perfectly Centered Floating Seal Logo */
+/* Rounded Floating Seal Logo */
 .header-logo {
   width: 150px !important;
   height: 150px !important;
   max-width: 150px !important;
   max-height: 150px !important;
-  
-  /* Centers image content inside element boundary */
   object-fit: cover;
-  object-position: -4px;
+  object-position: center;
   border-radius: 50%;
-  
-  /* Balanced Uniform Outer Ring */
   background-color: var(--primary-navy, #1b365d);
   padding: 6px;
-  /*border: 3px solid #ffffff;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);*/
-
-  /* Overlap Alignment */
   position: relative;
-  top: 5px;                 /* Shifts badge down so exactly 25% hangs below header */
-  margin-bottom: -15px;      /* Prevents pushing header height */
+  top: 12px;
+  margin-bottom: -24px;
   flex-shrink: 0;
-  z-index: 101;
-  
-  /* Nudge alignment fix for visual optical center */
-  transform: translate(0, 0);
+  z-index: 1001;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -255,18 +242,7 @@ header {
   color: #e2e8f0;
 }
 
-/* Mobile Screen Adjustment */
-@media (max-width: 640px) {
-  .header-logo {
-    width: 85px !important;
-    height: 85px !important;
-    max-width: 85px !important;
-    max-height: 85px !important;
-    top: 10px;
-    margin-bottom: -10px;
-  }
-}
-
+/* Desktop Navigation */
 nav ul {
   list-style: none;
   padding: 0;
@@ -293,16 +269,25 @@ nav a:hover {
   background-color: rgba(255, 255, 255, 0.1);
 }
 
+/* Mobile Toggle Button */
 .nav-toggle {
   display: none;
   background: transparent;
-  border: 2px solid #ffffff;
+  border: 2px solid rgba(255, 255, 255, 0.5);
   color: #ffffff;
-  padding: 8px 12px;
-  border-radius: 4px;
+  padding: 8px 14px;
+  border-radius: 6px;
   font-size: 1rem;
   font-weight: bold;
   cursor: pointer;
+  align-self: center;
+  z-index: 1002;
+}
+
+.nav-toggle:hover,
+.nav-toggle:focus-visible {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-color: #ffffff;
 }
 
 
@@ -386,7 +371,6 @@ footer p {
 /* --- Government Page Specific Grid & Cards --- */
 .grid-gov {
   display: grid;
-  /* Expands card minimum width to 320px for a roomy 3-column layout on desktop */
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 1.5rem;
   margin-top: 1.25rem;
@@ -397,12 +381,12 @@ footer p {
   background: var(--card-bg, #ffffff);
   border: 1px solid var(--border-color, #cbd5e1);
   border-radius: 8px;
-  padding: 1.75rem; /* Roomier padding */
+  padding: 1.75rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 220px; /* Gives official title, name, and contact info consistent height */
+  min-height: 220px;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -430,7 +414,7 @@ footer p {
   color: var(--primary-navy, #1b365d);
   font-weight: 600;
   text-decoration: underline;
-  word-break: break-all; /* Ensures ultra-long email addresses wrap cleanly */
+  word-break: break-all;
   margin-top: 0.5rem;
   display: inline-block;
 }
@@ -572,31 +556,6 @@ footer p {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background-color: #f1f5f9;
-  color: var(--primary-navy);
-  margin-bottom: 0.75rem;
-  transition: background-color 0.2s ease, color 0.2s ease;
-}
-
-.quick-badge:hover .badge-icon-wrapper {
-  background-color: var(--secondary-green);
-  color: #ffffff;
-}
-
-.badge-title {
-  font-size: 0.9rem;
-  font-weight: 600;
-  text-align: center;
-  line-height: 1.2;
-}
-/* --- Parser-Safe Vector Icons via CSS Masks --- */
-.badge-icon-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   width: 48px;
   height: 48px;
   border-radius: 50%;
@@ -617,7 +576,14 @@ footer p {
   transform: scale(1.05);
 }
 
-/* Base64 / Encoded Clean Vector Icon Masks */
+.badge-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-align: center;
+  line-height: 1.2;
+}
+
+/* Vector Icon Masks */
 .icon-trash {
   -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>');
   mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>');
@@ -723,6 +689,7 @@ footer p {
   background-color: #d97706;
   transform: scale(1.15);
 }
+
 /* Interactive Calendar */
 .calendar-card {
   background: #ffffff;
@@ -777,7 +744,7 @@ footer p {
 /* --- Modern Side-by-Side Split Grid Layout --- */
 .announcements-flex-container {
   display: grid;
-  grid-template-columns: 1fr 1fr; /* Equal 50/50 split on desktop screens */
+  grid-template-columns: 1fr 1fr;
   gap: 1.5rem;
   width: 100%;
   align-items: stretch;
@@ -798,7 +765,7 @@ footer p {
 
 /* Right Box: Compact Scrollable Feed for Standard Notices */
 .announcements-scroll-box {
-  max-height: 320px; /* Compact height keeps the calendar visible without scrolling */
+  max-height: 320px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -845,10 +812,10 @@ footer p {
   border-radius: 3px;
 }
 
-/* Mobile Responsive Fallback */
+/* Mobile Responsive Fallback for Announcements */
 @media (max-width: 768px) {
   .announcements-flex-container {
-    grid-template-columns: 1fr; /* Stacks vertically on mobile phones */
+    grid-template-columns: 1fr;
     gap: 1rem;
   }
 }
@@ -890,20 +857,29 @@ footer p {
 
 
 /* ==========================================================================
-   7. RESPONSIVE BREAKPOINTS
+   7. RESPONSIVE BREAKPOINTS (MOBILE OVERLAY FIXES)
    ========================================================================== */
 @media (max-width: 992px) {
   .header-container {
-    flex-wrap: wrap;
+    max-height: none;
+    flex-wrap: nowrap;
   }
 
   .nav-toggle {
-    display: flex;
+    display: block;
   }
 
   nav {
-    width: 100%;
     display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    width: 100%;
+    background-color: var(--primary-navy, #1b365d);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.35);
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    z-index: 1005; /* Ensures mobile menu overlays hero banners & cards */
   }
 
   nav.is-active {
@@ -913,18 +889,50 @@ footer p {
   nav ul {
     flex-direction: column;
     gap: 0;
-    margin-top: 1rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    margin: 0;
+    padding: 0.5rem 0;
+  }
+
+  nav ul li {
+    width: 100%;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  nav ul li:last-child {
+    border-bottom: none;
   }
 
   nav a {
     display: block;
-    padding: 12px 8px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 0.85rem 1.5rem;
+    font-size: 1.05rem;
+    border-radius: 0;
+  }
+
+  nav a:hover,
+  nav a:focus-visible {
+    background-color: var(--secondary-green, #2d5a27);
   }
 }
 
 @media (max-width: 640px) {
+  .header-logo {
+    width: 85px !important;
+    height: 85px !important;
+    max-width: 85px !important;
+    max-height: 85px !important;
+    top: 6px;
+    margin-bottom: -6px;
+  }
+
+  .brand-title {
+    font-size: 1.25rem;
+  }
+
+  .brand-subtitle {
+    font-size: 0.8rem;
+  }
+
   .quick-links-section {
     margin-top: 0;
     padding-top: 1rem;

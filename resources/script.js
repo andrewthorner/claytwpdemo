@@ -11,14 +11,14 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
-  // ==========================================================================
-  // 1. CORE SPA ROUTER & NAVIGATION
+// ==========================================================================
+  // 1. CORE SPA ROUTER & NAVIGATION (GITHUB PAGES HASH ROUTER)
   // ==========================================================================
   const mainContent = document.getElementById('app-content');
   const navToggle = document.querySelector('.nav-toggle');
   const navMenu = document.querySelector('nav');
 
-  // --- Mobile Hamburger Menu Toggle ---
+  // Mobile Hamburger Toggle
   if (navToggle && navMenu) {
     navToggle.addEventListener('click', () => {
       const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
@@ -27,15 +27,15 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // --- Dynamic Content Loader (GitHub Pages Compatible) ---
-  async function loadPage(pageName, pushToHistory = true) {
+  // --- Dynamic Content Loader ---
+  async function loadPage(pageName) {
     try {
-      let cleanName = pageName.replace(/^\/+|\/+$/g, '');
-      if (!cleanName || cleanName === 'index.html') {
+      let cleanName = pageName.replace(/^#\/?/, '').replace(/^\/+|\/+$/g, '');
+      if (!cleanName || cleanName === 'index.html' || cleanName === 'home') {
         cleanName = 'home';
       }
 
-      // Relative path fetch prevents 404s on GitHub Pages subpaths
+      // Fetch HTML fragment relative to root folder
       const response = await fetch(`pages/${cleanName}.html`);
       
       if (!response.ok) {
@@ -45,11 +45,10 @@ document.addEventListener('DOMContentLoaded', () => {
       const html = await response.text();
 
       if (!mainContent) {
-        console.error('CRITICAL: #app-content element missing from index.html');
+        console.error('CRITICAL: #app-content element missing');
         return;
       }
 
-      // Inject the template HTML into main container
       mainContent.innerHTML = html;
 
       // Trigger home dynamic widgets after DOM insertion
@@ -62,18 +61,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       }
 
-      // Keep pushState clean on both GitHub Pages and custom domain environments
-      if (pushToHistory) {
-        const repoPath = window.location.pathname.includes('/claytwpdemo') ? '/claytwpdemo' : '';
-        const cleanPath = cleanName === 'home' ? `${repoPath}/` : `${repoPath}/${cleanName}`;
-        history.pushState({ page: cleanName }, '', cleanPath);
-      }
-
-      // Set accessibility focus to main area
+      // Manage focus for accessibility
       mainContent.setAttribute('tabindex', '-1');
       mainContent.focus();
 
-      // Close mobile menu on page navigate
+      // Close mobile navigation menu on route change
       if (navMenu && navMenu.classList.contains('is-active')) {
         navMenu.classList.remove('is-active');
         if (navToggle) navToggle.setAttribute('aria-expanded', 'false');
@@ -84,14 +76,26 @@ document.addEventListener('DOMContentLoaded', () => {
         mainContent.innerHTML = `
           <section class="error-msg" style="padding: 2.5rem 1rem; text-align: center;">
             <h2>Page Load Error</h2>
-            <p>Sorry, the requested page could not be loaded.</p>
-            <a href="/" data-link style="font-weight: bold; text-decoration: underline;">&larr; Return Home</a>
+            <p>Sorry, the requested page (${pageName}) could not be loaded.</p>
+            <a href="#home" style="font-weight: bold; text-decoration: underline;">&larr; Return Home</a>
           </section>
         `;
       }
       console.error('SPA Router Error:', error);
     }
   }
+
+  // --- Hash Change Route Listener ---
+  function handleHashRoute() {
+    const hash = window.location.hash || '#home';
+    loadPage(hash);
+  }
+
+  // Listen for hash changes (e.g., clicking #government or using browser Back/Forward)
+  window.addEventListener('hashchange', handleHashRoute);
+
+  // Initial load execution
+  handleHashRoute();
 
 // --- Navigation Link Event Delegation (GitHub Pages Compatible) ---
   document.addEventListener('click', (e) => {

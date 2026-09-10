@@ -4,7 +4,7 @@
 
    TABLE OF CONTENTS:
    1. CORE SPA ROUTER & NAVIGATION
-   2. HOME PAGE: ANNOUNCEMENTS (PINNED & SCROLL)
+   2. HOME PAGE: ANNOUNCEMENTS (CAROUSEL & SCROLL FEED)
    3. HOME PAGE: INTERACTIVE CALENDAR ENGINE
    4. MINUTES PAGE: TABS & YEAR FILTER CONTROLS
    ========================================================================== */
@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-// --- Dynamic Content Loader (GitHub Pages Compatible) ---
+  // --- Dynamic Content Loader (GitHub Pages Compatible) ---
   async function loadPage(pageName, pushToHistory = true) {
     try {
       let cleanName = pageName.replace(/^\/+|\/+$/g, '');
@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
         cleanName = 'home';
       }
 
-      // REMOVED LEADING SLASH: Fetches relative to current repo folder
+      // Relative path fetch prevents 404s on GitHub Pages subpaths
       const response = await fetch(`pages/${cleanName}.html`);
       
       if (!response.ok) {
@@ -43,36 +43,17 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       const html = await response.text();
-      mainContent.innerHTML = html;
 
-      if (cleanName === 'home') {
-        setTimeout(() => {
-          loadAnnouncements();
-          initCalendar();
-        }, 50);
+      if (!mainContent) {
+        console.error('CRITICAL: #app-content element missing from index.html');
+        return;
       }
 
-      // Keep pushState clean on GitHub Pages
-      if (pushToHistory) {
-        const repoPath = window.location.pathname.includes('/claytwpdemo') ? '/claytwpdemo' : '';
-        const cleanPath = cleanName === 'home' ? `${repoPath}/` : `${repoPath}/${cleanName}`;
-        history.pushState({ page: cleanName }, '', cleanPath);
-      }
-
-      mainContent.setAttribute('tabindex', '-1');
-      mainContent.focus();
-
-    } catch (error) {
-      console.error('SPA Router Error:', error);
-    }
-  }
-
-      // Inject the template HTML
+      // Inject the template HTML into main container
       mainContent.innerHTML = html;
 
       // Trigger home dynamic widgets after DOM insertion
       if (cleanName === 'home') {
-        // RequestAnimationFrame guarantees DOM elements exist before fetching JSON
         requestAnimationFrame(() => {
           setTimeout(() => {
             loadAnnouncements();
@@ -81,17 +62,21 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       }
 
+      // Keep pushState clean on both GitHub Pages and custom domain environments
       if (pushToHistory) {
-        const cleanPath = cleanName === 'home' ? '/' : `/${cleanName}`;
+        const repoPath = window.location.pathname.includes('/claytwpdemo') ? '/claytwpdemo' : '';
+        const cleanPath = cleanName === 'home' ? `${repoPath}/` : `${repoPath}/${cleanName}`;
         history.pushState({ page: cleanName }, '', cleanPath);
       }
 
+      // Set accessibility focus to main area
       mainContent.setAttribute('tabindex', '-1');
       mainContent.focus();
 
+      // Close mobile menu on page navigate
       if (navMenu && navMenu.classList.contains('is-active')) {
         navMenu.classList.remove('is-active');
-        navToggle.setAttribute('aria-expanded', 'false');
+        if (navToggle) navToggle.setAttribute('aria-expanded', 'false');
       }
 
     } catch (error) {
@@ -110,14 +95,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- Navigation Link Event Delegation ---
   document.addEventListener('click', (e) => {
-    // Intercept clicks on elements with [data-page], [data-link], or internal <a> tags
     const link = e.target.closest('[data-page], [data-link], a[href^="/"]');
     
     if (link) {
       const href = link.getAttribute('href');
       const dataPage = link.getAttribute('data-page');
 
-      // Ignore external links, mailto, tel, or hash links
+      // Ignore external links, mailto, tel, or internal anchor hashes
       if (href && (href.startsWith('http') || href.startsWith('mailto:') || href.startsWith('tel:') || href.startsWith('#'))) {
         return;
       }
@@ -135,17 +119,17 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.state && e.state.page) {
       loadPage(e.state.page, false);
     } else {
-      const path = window.location.pathname.replace(/^\/+|\/+$/g, '') || 'home';
+      const path = window.location.pathname.replace('/claytwpdemo', '').replace(/^\/+|\/+$/g, '') || 'home';
       loadPage(path, false);
     }
   });
 
   // --- Initial SPA Router Trigger ---
-  const initialPath = window.location.pathname.replace(/^\/+|\/+$/g, '') || 'home';
+  const initialPath = window.location.pathname.replace('/claytwpdemo', '').replace(/^\/+|\/+$/g, '') || 'home';
   loadPage(initialPath, false);
 
 
-// ==========================================================================
+  // ==========================================================================
   // 2. HOME PAGE: ANNOUNCEMENTS CAROUSEL (WCAG AA COMPLIANT)
   // ==========================================================================
   let carouselInterval = null;
@@ -156,7 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!container) return;
 
     try {
-      const response = await fetch('/resources/announcements-notices.json');
+      const response = await fetch('resources/announcements-notices.json');
       if (!response.ok) throw new Error('Could not load announcements data.');
 
       const announcements = await response.json();
@@ -168,13 +152,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
       checkAndTriggerModals(announcements);
 
-      // Limit pinned notices to top 3 for clean display
       const pinnedItems = announcements.filter(item => item.pinned === true).slice(0, 3);
       const standardItems = announcements.filter(item => !item.pinned);
 
       let htmlOutput = '<div class="announcements-flex-container">';
 
-      // Left Column: Dynamic Pinned Notice Carousel Box
+      // Left Column: Pinned Notice Carousel Box
       if (pinnedItems.length > 0) {
         htmlOutput += `
           <div class="pinned-carousel-wrapper" id="pinned-carousel" aria-roledescription="carousel" aria-label="Important Township Notices">
@@ -194,7 +177,6 @@ document.addEventListener('DOMContentLoaded', () => {
               `).join('')}
             </div>
 
-            <!-- Carousel Navigation Dots -->
             ${pinnedItems.length > 1 ? `
               <div class="carousel-dots-container" role="tablist" aria-label="Notice Slide Controls">
                 ${pinnedItems.map((_, index) => `
@@ -211,10 +193,10 @@ document.addEventListener('DOMContentLoaded', () => {
         htmlOutput += `
           <div class="announcements-scroll-box" tabindex="0" aria-label="Scrollable Township Public Notices">
             ${standardItems.map(item => `
-              <article class="card" style="border-top: 3px solid var(--primary-navy);">
+              <article class="card" style="border-top: 3px solid var(--primary-navy, #1b365d);">
                 <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem;">
-                  <span style="font-size: 0.75rem; font-weight: bold; background: #e2e8f0; color: var(--primary-navy); padding: 2px 6px; border-radius: 4px;">${item.category}</span>
-                  <time style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">${item.date}</time>
+                  <span style="font-size: 0.75rem; font-weight: bold; background: #e2e8f0; color: var(--primary-navy, #1b365d); padding: 2px 6px; border-radius: 4px;">${item.category}</span>
+                  <time style="font-size: 0.8rem; color: var(--text-muted, #4b5563); font-weight: 600;">${item.date}</time>
                 </div>
                 <h3>${item.title}</h3>
                 <p>${item.summary}</p>
@@ -228,7 +210,6 @@ document.addEventListener('DOMContentLoaded', () => {
       htmlOutput += '</div>';
       container.innerHTML = htmlOutput;
 
-      // Initialize Carousel Controls if multiple pinned notices exist
       if (pinnedItems.length > 1) {
         initCarouselEngine(pinnedItems.length);
       }
@@ -239,7 +220,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // --- Carousel Logic & Auto-Rotation ---
+  // --- Carousel Engine Controls ---
   function initCarouselEngine(totalSlides) {
     const carouselWrapper = document.getElementById('pinned-carousel');
     const dots = document.querySelectorAll('.carousel-dot');
@@ -259,7 +240,6 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
-    // Dot click listener
     dots.forEach(dot => {
       dot.addEventListener('click', (e) => {
         const slideIdx = parseInt(e.target.getAttribute('data-slide'));
@@ -268,7 +248,6 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
 
-    // Auto-rotation (6 seconds per slide)
     function startAutoRotation() {
       carouselInterval = setInterval(() => {
         const nextIndex = (currentSlideIndex + 1) % totalSlides;
@@ -281,7 +260,6 @@ document.addEventListener('DOMContentLoaded', () => {
       startAutoRotation();
     }
 
-    // Pause on hover or focus for WCAG compliance
     carouselWrapper.addEventListener('mouseenter', () => clearInterval(carouselInterval));
     carouselWrapper.addEventListener('mouseleave', startAutoRotation);
     carouselWrapper.addEventListener('focusin', () => clearInterval(carouselInterval));
@@ -290,7 +268,7 @@ document.addEventListener('DOMContentLoaded', () => {
     startAutoRotation();
   }
 
-  // --- Modal Queue Engine ---
+  // --- Modal Popup Controls ---
   let popupQueue = [];
 
   function checkAndTriggerModals(announcements) {
@@ -364,7 +342,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (!calendarData) {
       try {
-        const response = await fetch('/resources/calendar.json');
+        const response = await fetch('resources/calendar.json');
         if (!response.ok) throw new Error('Could not fetch calendar.json');
         calendarData = await response.json();
       } catch (e) {
@@ -543,9 +521,9 @@ document.addEventListener('DOMContentLoaded', () => {
         targetContainer.innerHTML = `
           <h4 style="margin-top: 0;">${selectedYear} Meeting Minutes</h4>
           <ul style="line-height: 1.8;">
-            <li><a href="/resources/pdf/minutes-${selectedYear}-01.pdf" target="_blank" aria-label="Download January ${selectedYear} Meeting Minutes PDF">January ${selectedYear} Minutes (PDF)</a></li>
-            <li><a href="/resources/pdf/minutes-${selectedYear}-02.pdf" target="_blank" aria-label="Download February ${selectedYear} Meeting Minutes PDF">February ${selectedYear} Minutes (PDF)</a></li>
-            <li><a href="/resources/pdf/minutes-${selectedYear}-03.pdf" target="_blank" aria-label="Download March ${selectedYear} Meeting Minutes PDF">March ${selectedYear} Minutes (PDF)</a></li>
+            <li><a href="resources/pdf/minutes-${selectedYear}-01.pdf" target="_blank" aria-label="Download January ${selectedYear} Meeting Minutes PDF">January ${selectedYear} Minutes (PDF)</a></li>
+            <li><a href="resources/pdf/minutes-${selectedYear}-02.pdf" target="_blank" aria-label="Download February ${selectedYear} Meeting Minutes PDF">February ${selectedYear} Minutes (PDF)</a></li>
+            <li><a href="resources/pdf/minutes-${selectedYear}-03.pdf" target="_blank" aria-label="Download March ${selectedYear} Meeting Minutes PDF">March ${selectedYear} Minutes (PDF)</a></li>
           </ul>
         `;
       }

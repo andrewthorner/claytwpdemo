@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-// --- Dynamic Content Loader ---
+// --- Dynamic Content Loader (GitHub Pages Compatible) ---
   async function loadPage(pageName, pushToHistory = true) {
     try {
       let cleanName = pageName.replace(/^\/+|\/+$/g, '');
@@ -35,17 +35,37 @@ document.addEventListener('DOMContentLoaded', () => {
         cleanName = 'home';
       }
 
-      const response = await fetch(`/pages/${cleanName}.html`);
+      // REMOVED LEADING SLASH: Fetches relative to current repo folder
+      const response = await fetch(`pages/${cleanName}.html`);
+      
       if (!response.ok) {
         throw new Error(`Page not found (${response.status})`);
       }
 
       const html = await response.text();
-      
-      if (!mainContent) {
-        console.error('CRITICAL: #app-content missing from index.html');
-        return;
+      mainContent.innerHTML = html;
+
+      if (cleanName === 'home') {
+        setTimeout(() => {
+          loadAnnouncements();
+          initCalendar();
+        }, 50);
       }
+
+      // Keep pushState clean on GitHub Pages
+      if (pushToHistory) {
+        const repoPath = window.location.pathname.includes('/claytwpdemo') ? '/claytwpdemo' : '';
+        const cleanPath = cleanName === 'home' ? `${repoPath}/` : `${repoPath}/${cleanName}`;
+        history.pushState({ page: cleanName }, '', cleanPath);
+      }
+
+      mainContent.setAttribute('tabindex', '-1');
+      mainContent.focus();
+
+    } catch (error) {
+      console.error('SPA Router Error:', error);
+    }
+  }
 
       // Inject the template HTML
       mainContent.innerHTML = html;

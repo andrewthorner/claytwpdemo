@@ -1,0 +1,28 @@
+{
+  "recurring": [
+    {
+      "id": "rec-board",
+      "title": "Regular Board Meeting",
+      "time": "7:00 pm",
+      "location": "Township Hall",
+      "rule": "2nd_monday"
+    },
+    {
+      "id": "rec-planning",
+      "title": "Planning Commission Meeting",
+      "time": "7:00 pm",
+      "location": "Township Hall",
+      "rule": "1st_thursday",
+      "months": [2, 3, 4, 5, 6, 8, 10, 11]
+    }
+  ],
+  "customEvents": [
+    {
+      "id": "custom-1",
+      "title": "Primary Election",
+      "date": "2026-08-04",
+      "time": "7:00 am",
+      "location": "Township Hall"
+    }
+  ]
+}

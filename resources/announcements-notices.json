@@ -1,0 +1,58 @@
+[
+  {
+    "id": 2,
+    "title": "Public Hearing: Proposed Zoning Ordinance Amendments",
+    "date": "April 28, 2026",
+    "category": "Public Notice",
+    "summary": "The Planning Commission will hold a public hearing on proposed property setback revisions at the Township Hall.",
+    "link": "/minutes",
+    "linkText": "Read Hearing Notice",
+    "pinned": true,
+    "popup": true
+  },
+  {
+    "id": 1,
+    "title": "Spring Road Brining Schedule Announced",
+    "date": "May 10, 2026",
+    "category": "Roads & Public Works",
+    "summary": "Clayton Township road brining is scheduled to begin next week, weather permitting. Please review the posted route map for details.",
+    "link": "/services",
+    "linkText": "View Road Schedule",
+    "pinned": false,
+    "popup": false
+  },
+  {
+    "id": 3,
+    "title": "Township Cemetery Cleanup Notice",
+    "date": "April 15, 2026",
+    "category": "Cemetery",
+    "summary": "All winter decorations must be removed from plot grounds by May 1st to allow for seasonal grounds maintenance.",
+    "link": "/services",
+    "linkText": "Cemetery Rules",
+    "pinned": false,
+    "popup": false
+  },
+  {
+    "id": 4,
+    "title": "2026 Annual Dust Control Application Form",
+    "date": "March 20, 2026",
+    "category": "Roads & Public Works",
+    "summary": "Residents requesting extra road brining services can download and submit the dust control application at the hall.",
+    "link": "/services",
+    "linkText": "Download Application",
+    "pinned": false,
+    "popup": false
+  },
+  {
+    "id": 5,
+    "title": "Emergency Notice: Road Washout on Dobler Rd",
+    "date": "September 8, 2026",
+    "category": "Emergency",
+    "summary": "Dobler Road between M-65 and Maple Rd is temporarily closed for culvert repair.",
+    "link": "/services",
+    "linkText": "View Detour Map",
+    "pinned": true,
+    "popup": true
+  }
+
+]

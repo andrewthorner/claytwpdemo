@@ -213,7 +213,7 @@ header {
   padding: 6px;
   position: relative;
   top: 12px;
-  margin-bottom: -24px;
+  margin-bottom: -20px;
   flex-shrink: 0;
   z-index: 1001;
   transition: transform 0.2s ease, box-shadow 0.2s ease;

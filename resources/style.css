@@ -191,6 +191,7 @@ header {
 
 .header-container {
   max-width: 1400px;
+  max-height: 100px;
   margin: 0 auto;
   display: flex;
   justify-content: space-between;

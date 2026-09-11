@@ -45,12 +45,12 @@
   },
   {
     "id": 5,
-    "title": "Emergency Notice: Road Washout on Dobler Rd",
-    "date": "September 8, 2026",
-    "category": "Emergency",
-    "summary": "Dobler Road between M-65 and Maple Rd is temporarily closed for culvert repair.",
-    "link": "/services",
-    "linkText": "View Detour Map",
+    "title": "Public Hearing: Proposed trash list on winter taxes",
+    "date": "September 11, 2026",
+    "category": "Public Notice",
+    "summary": "There will be a public hearin on September 11,2026 at 7:00pm at the Clayton Township Hall regarding trash collection on the winter taxes",
+    "link": "resources/pdf/Claytontwpresparcelsbldg.pdf",
+    "linkText": "View Parcel list for Trash",
     "pinned": true,
     "popup": true
   }

@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       mainContent.setAttribute('tabindex', '-1');
-      mainContent.focus();
+      mainContent.focus({ preventScroll: true });
 
       if (navMenu && navMenu.classList.contains('is-active')) {
         navMenu.classList.remove('is-active');

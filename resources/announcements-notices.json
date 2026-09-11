@@ -1,11 +1,11 @@
 [
   {
     "id": 2,
-    "title": "Public Hearing: Proposed Zoning Ordinance Amendments",
-    "date": "April 28, 2026",
+    "title": "Public Hearing: Special use application for Joesph Stolzfus",
+    "date": "October 1, 2026",
     "category": "Public Notice",
-    "summary": "The Planning Commission will hold a public hearing on proposed property setback revisions at the Township Hall.",
-    "link": "/minutes",
+    "summary": "The Planning Commission will hold a public hearing on proposed special use permit for Joesph Stolzfus to have a hydrulic cylinder and bicycle repair shop on 1810 North Rd Twining MI at the Township Hall at 7:00pm.",
+    "link": "resources/pdf/StolzfusPublicHearing.pdf",
     "linkText": "Read Hearing Notice",
     "pinned": true,
     "popup": true
@@ -15,9 +15,9 @@
     "title": "Spring Road Brining Schedule Announced",
     "date": "May 10, 2026",
     "category": "Roads & Public Works",
-    "summary": "Clayton Township road brining is scheduled to begin next week, weather permitting. Please review the posted route map for details.",
-    "link": "/services",
-    "linkText": "View Road Schedule",
+    "summary": "Clayton Township will not be provding brining this year.  If you wish to have brining done on your road, please contact D&J Trucking",
+    "link": "/roads",
+    "linkText": "View Road Brining information",
     "pinned": false,
     "popup": false
   },
